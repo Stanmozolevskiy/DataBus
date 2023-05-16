@@ -1,9 +1,13 @@
-﻿<Users>
-  
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Users>
   <User>
     <FirstName>Stan</FirstName>
     <LastName>Mozolevskiy</LastName>
     <Id>1</Id>
   </User>
-  
+  <User>
+    <FirstName>Fill</FirstName>
+    <LastName>Mozolevskiy</LastName>
+    <Id>2</Id>
+</User>
 </Users>

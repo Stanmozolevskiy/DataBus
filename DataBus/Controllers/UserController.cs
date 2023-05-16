@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Xml;
+using System.IO;
 using System.Xml.Linq;
 
 namespace DataBus.Controllers
@@ -31,7 +31,8 @@ namespace DataBus.Controllers
             // if not create user 
             users.Add(user);
 
-
+            users.Save("UserList.xml");
+            //File.WriteAllText("UserLIst.xml", users);
 
             return Ok("User successfuly added");
         }
