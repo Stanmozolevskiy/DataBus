@@ -31,8 +31,8 @@ namespace DataBus.Controllers
             // if not create user 
             users.Add(user);
 
+            // write back to the file 
             users.Save("UserList.xml");
-            //File.WriteAllText("UserLIst.xml", users);
 
             return Ok("User successfuly added");
         }
