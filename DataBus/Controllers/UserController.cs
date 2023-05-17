@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.IO;
 using System.Xml.Linq;
 
 namespace DataBus.Controllers
@@ -26,7 +25,7 @@ namespace DataBus.Controllers
             if (isExist)
                 return Ok("The user already in the Database");
 
-            XElement users = XDocument.Load(@"UserLIst.xml").Root;
+            XElement users = XDocument.Load(@"/app/heroku_output/UserLIst.xml").Root;
 
             // if not create user 
             users.Add(user);
