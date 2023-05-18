@@ -6,7 +6,7 @@ namespace DataBus.Controllers
     [Route("[controller]"), ApiController, Produces("application/xml")]
     public class UserController: ControllerBase
     {
-        [HttpPost("GetUserById"), Produces("application/xml")]
+        [HttpPost("GetUserById")]
         public IActionResult GetUser(XElement user)
         {
            
@@ -61,10 +61,34 @@ namespace DataBus.Controllers
             return Ok("User has been deleted");
         }
 
-        [HttpPut]
+        [HttpPost("UpdateUser")]
         public IActionResult UpdateUser([FromBody] XElement user)
         {
-            return Ok();
+
+            string userId = user.Element("Id").Value;
+
+            // get all users from the file
+            XElement users = XDocument.Load(@"UserLIst.xml").Root;
+
+            if (doesUserexist(int.Parse(userId)))
+            {
+      
+                // find existing user
+                XElement existingUser = users.Elements("User").ToList().FirstOrDefault(x => x.Element("Id").Value == userId);
+
+                // remove the node with existing user
+                existingUser.Remove();
+
+            }
+                // if not create user 
+                users.Add(user);
+
+                // write back to the file 
+                users.Save("UserList.xml");
+
+                return Ok("User successfuly updated");
+
+
         }
 
         private XElement getUserById(int userId)
