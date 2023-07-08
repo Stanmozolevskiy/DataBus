@@ -4,6 +4,7 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 # User-specific files
+appsettings.Development.json
 *.rsuser
 *.suo
 *.user
@@ -12,6 +13,7 @@
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
+nuget.config
 
 # Mono auto generated files
 mono_crash.*
@@ -361,3 +363,4 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/DataBus/appsettings.Development.json
