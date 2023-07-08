@@ -6,18 +6,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Dependencies\DataAccess.dll" />
     <None Remove="UserList.xml" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Dependencies\DataAccess.dll" />
     <EmbeddedResource Include="UserList.xml" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DataAccess" Version="1.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="DataAccess">
+      <HintPath>Dependencies\DataAccess.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
