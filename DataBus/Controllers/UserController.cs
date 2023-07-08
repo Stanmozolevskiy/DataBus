@@ -61,7 +61,7 @@ namespace DataBus.Controllers
             await Task.Yield();
             XElement response = await DataAccess.DataAccess.CRUDAsync<XElement>(queryContext, "GetUserList",
                                                                        CommandTypeEx.StoredProcedure);
-            return Ok(response);
+            return Ok(configuration.GetVariableByEnvironment("Database:QueryContext") + " _______" + configuration["ENVIRONMENT"]);
         }
 
 
