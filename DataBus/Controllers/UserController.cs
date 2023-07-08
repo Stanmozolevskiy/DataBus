@@ -11,7 +11,7 @@ namespace DataBus.Controllers
         public UserController(IConfiguration configuration)
         {
             this.configuration = configuration;
-            queryContext = new QueryContext(configuration["Database:QueryContext"],
+            queryContext = new QueryContext(configuration.GetVariableByEnvironment("Database:QueryContext"),
                         300, TimeSpan.FromSeconds(10), 5);
         }
 
