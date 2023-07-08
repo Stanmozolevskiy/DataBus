@@ -1,88 +1,73 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Data.SqlClient;
 using System.Xml.Linq;
+using static DataAccess.DataAccess;
 
 namespace DataBus.Controllers
 {
     [Route("[controller]"), ApiController, Produces("application/xml")]
     public class UserController: ControllerBase
     {
-        [HttpPost("GetUserById"), Produces("application/xml")]
-        public IActionResult GetUser(XElement user)
+        public UserController(IConfiguration configuration)
         {
-           
-            string userId = user.Element("Id").Value;
-            return Ok(getUserById(int.Parse(userId)));
+            this.configuration = configuration;
+            queryContext = new QueryContext(configuration["Database:QueryContext"],
+                        300, TimeSpan.FromSeconds(10), 5);
+        }
+
+        [HttpPost("GetUserById"), Produces("application/xml")]
+        public async Task<IActionResult> GetUser(XElement user)
+        {
+            int id = int.Parse(user.Attribute("id").Value);
+            XElement response = await DataAccess.DataAccess.CRUDAsync<XElement>(queryContext, "GetUser",
+                                                                                        CommandTypeEx.StoredProcedure,
+                                                                                        new SqlParameter("@id", id));
+            return Ok(response);
         }
 
         [HttpPost("CreateUser")]
-        public IActionResult CreateUser([FromBody] XElement user)
+        public async Task<IActionResult> CreateUser([FromBody] XElement user)
         {
-
-            string id = user.Element("Id").Value;
-            var isExist = doesUserexist(int.Parse(id));
-
-            // check if user exists 
-            if (isExist)
-                return Ok("The user already in the Database");
-
-            XElement users = XDocument.Load(@"UserLIst.xml").Root;
-
-            // if not create user 
-            users.Add(user);
-
-            // write back to the file 
-            users.Save("UserList.xml");
-
-            return Ok("User successfuly added");
+            XElement response = await DataAccess.DataAccess.CRUDAsync<XElement>(queryContext, "CreateNewUser",
+                                                                        CommandTypeEx.StoredProcedure,
+                                                                        new SqlParameter("@user", user.ToString()));
+            return Ok(response);
         }
 
         [HttpPost("DeleteUser")]
-        public IActionResult DeleteUser([FromBody] XElement user)
+        public async Task<IActionResult> DeleteUser([FromBody] XElement user)
         {
-            string userId = user.Element("Id").Value;
-            var isExist = doesUserexist(int.Parse(userId));
+            int id = int.Parse(user.Attribute("id").Value);
 
-            // check if user exists 
-            if (!isExist)
-                return Ok("The user is not found");
+            XElement response = await DataAccess.DataAccess.CRUDAsync<XElement>(queryContext, "DeleteUser",
+                                                                        CommandTypeEx.StoredProcedure,
+                                                                        new SqlParameter("@user", user.ToString()));
 
-            // get the list of all users
-            XElement users = XDocument.Load(@"UserLIst.xml").Root;
-
-            // find existing user
-            XElement existingUser = users.Elements("User").ToList().FirstOrDefault(x => x.Element("Id").Value == userId);
-
-            // remove the node with existing user
-            existingUser.Remove();
-
-            // write back to the file 
-            users.Save("UserList.xml");
-
-            return Ok("User has been deleted");
+            return Ok(response);
         }
 
         [HttpPut]
-        public IActionResult UpdateUser([FromBody] XElement user)
+        public async Task<IActionResult> UpdateUser([FromBody] XElement user)
         {
-            return Ok();
+            XElement response = await DataAccess.DataAccess.CRUDAsync<XElement>(queryContext, "UpdateUser",
+                                                                       CommandTypeEx.StoredProcedure,
+                                                                       new SqlParameter("@user", user.ToString()));
+            return Ok(response);
         }
 
-        private XElement getUserById(int userId)
+        [HttpGet]
+        public async Task<IActionResult> GetUserList()
         {
-            List<XElement> users = XDocument.Load(@"UserLIst.xml").Root.Elements("User").ToList();
-
-            return users.FirstOrDefault(x => int.Parse(x.Element("Id").Value) == userId);
+            await Task.Yield();
+            XElement response = await DataAccess.DataAccess.CRUDAsync<XElement>(queryContext, "GetUserList",
+                                                                       CommandTypeEx.StoredProcedure);
+            return Ok(response);
         }
 
-        private bool doesUserexist(int userId)
-        {
-            List<XElement> users = XDocument.Load(@"UserLIst.xml").Root.Elements("User").ToList();
-            XElement user = users.FirstOrDefault(x => int.Parse(x.Element("Id").Value) == userId);
 
-            if (user == null)
-                return false;
-
-            return true;
-        }
+        private IConfiguration configuration;
+        private QueryContext queryContext;
     }
+
 }
+

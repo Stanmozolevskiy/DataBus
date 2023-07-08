@@ -2,6 +2,15 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+// Handling the environments here (Heroku or local Json)
+var configuration = new ConfigurationBuilder()
+    .SetBasePath(builder.Environment.ContentRootPath)
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+    .AddEnvironmentVariables()
+    .Build();
+
+
 builder.Services.AddControllers()
     .AddXmlSerializerFormatters()
     .AddXmlDataContractSerializerFormatters();
@@ -24,7 +33,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    app.UseExceptionHandler("/Home/Error");
+    //app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
@@ -41,3 +50,21 @@ app.MapControllerRoute(
 
 
 app.Run();
+
+
+public static class IConfigurationExtensions
+{
+    public static string GetVariableByEnvironment(this IConfiguration configuration, string variable)
+    {
+        string environment = configuration["ENVIRONMENT"];
+
+        // Return production connection string from Heroku variables
+        if (environment == "production")
+            return Environment.GetEnvironmentVariable(configuration[variable]);
+        
+        // Return development connection string from the appsettings.json
+        else
+            return configuration[variable];
+        
+    }
+}
