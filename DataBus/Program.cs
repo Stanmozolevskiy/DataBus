@@ -60,7 +60,7 @@ public static class IConfigurationExtensions
         string res = configuration[variable];
 
         // Return production connection string from Heroku variables
-        if (environment is not "production")
+        if (environment != "Production")
         {
             return res;
         }
