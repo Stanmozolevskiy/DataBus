@@ -3,12 +3,12 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 // Handling the environments here (Heroku or local Json)
-//var configuration = new ConfigurationBuilder()
-//    .SetBasePath(builder.Environment.ContentRootPath)
-//    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-//    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
-//    .AddEnvironmentVariables()
-//    .Build();
+var configuration = new ConfigurationBuilder()
+    .SetBasePath(builder.Environment.ContentRootPath)
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+    .AddEnvironmentVariables()
+    .Build();
 
 
 builder.Services.AddControllers()
