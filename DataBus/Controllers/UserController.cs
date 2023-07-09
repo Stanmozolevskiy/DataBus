@@ -59,9 +59,9 @@ namespace DataBus.Controllers
         public async Task<IActionResult> GetUserList()
         {
             await Task.Yield();
-            //XElement response = await DataAccess.DataAccess.CRUDAsync<XElement>(queryContext, "GetUserList",
-            //                                                           CommandTypeEx.StoredProcedure);
-            return Ok(configuration.GetVariableByEnvironment("Database:QueryContext") + " _______" + Environment.GetEnvironmentVariable("MSSQL_URL"));
+            XElement response = await DataAccess.DataAccess.CRUDAsync<XElement>(queryContext, "GetUserList",
+                                                                       CommandTypeEx.StoredProcedure);
+            return Ok(response);
         }
 
 
