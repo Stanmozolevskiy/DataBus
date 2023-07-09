@@ -57,17 +57,18 @@ public static class IConfigurationExtensions
     public static string GetVariableByEnvironment(this IConfiguration configuration, string variable)
     {
         string environment = configuration["ENVIRONMENT"];
+        string res = configuration[variable];
 
         // Return production connection string from Heroku variables
         if (environment is not "production")
         {
-            return configuration[variable];
+            return res;
         }
 
         // Return development connection string from the appsettings.json
         else
         {
-            return Environment.GetEnvironmentVariable(configuration[variable]);
+            return Environment.GetEnvironmentVariable(res);
         }
         
     }
