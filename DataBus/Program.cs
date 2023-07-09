@@ -62,7 +62,7 @@ public static class IConfigurationExtensions
         // Return production connection string from Heroku variables
         if (environment != "Production")
         {
-            return res;
+            return Environment.GetEnvironmentVariable(res);
         }
 
         // Return development connection string from the appsettings.json
