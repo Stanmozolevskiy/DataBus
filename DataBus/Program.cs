@@ -59,13 +59,13 @@ public static class IConfigurationExtensions
         string environment = configuration["ENVIRONMENT"];
         string res = configuration[variable];
 
-        // Return production connection string from Heroku variables
+        // Return development connection string from the appsettings.json
         if (environment == "Development")
         {
             return res;
         }
 
-        // Return development connection string from the appsettings.json
+        // Return production connection string from Heroku variables
         else
         {
             return Environment.GetEnvironmentVariable(res);
